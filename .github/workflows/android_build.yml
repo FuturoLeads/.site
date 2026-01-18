@@ -40,16 +40,19 @@ jobs:
 
       - name: Fix Capacitor Config and Sync
         run: |
+          # Corrige o webDir e remove a pasta android antiga para garantir uma sincronização limpa
           sed -i "s/webDir: 'dist'/webDir: 'dist\/public'/g" capacitor.config.ts
+          rm -rf android
+          pnpm cap add android
           pnpm cap sync android
 
       - name: Build Android APK
         run: |
           cd android
           chmod +x gradlew
-          # Usamos assembleDebug primeiro para garantir que o código compila
-          # Adicionamos --stacktrace para ver o erro real se falhar
-          ./gradlew assembleDebug --stacktrace
+          # Aumenta a memória do Gradle e executa um build limpo
+          export GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx2048m -Dorg.gradle.daemon=false"
+          ./gradlew clean assembleDebug --info
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
