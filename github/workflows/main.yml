@@ -1,0 +1,25 @@
+name: 24/7 Bot
+
+on:
+  push:
+  schedule:
+    - cron: '*/59 * * * *' # Reinicia a cada 59 minutos para garantir o funcionamento
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Run Bot
+        run: node index.js
