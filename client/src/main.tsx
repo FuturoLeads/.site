@@ -48,10 +48,17 @@ queryClient.getMutationCache().subscribe(event => {
   }
 });
 
+const getBaseUrl = () => {
+  if (typeof window !== "undefined" && window.location.origin.includes("localhost") && !window.location.hostname.includes("manus")) {
+    return "https://digimarket-xr799ese.manus.space";
+  }
+  return "";
+};
+
 const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
-      url: "/api/trpc",
+      url: `${getBaseUrl()}/api/trpc`,
       transformer: superjson,
       fetch(input, init) {
         return globalThis.fetch(input, {
