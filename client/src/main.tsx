@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink, TRPCClientError } from "@trpc/client";
 import { createRoot } from "react-dom/client";
 import superjson from "superjson";
-import App from "./App";
+import App from "./ App";
 import { getLoginUrl } from "./const";
 import "./index.css";
 
@@ -48,17 +48,13 @@ queryClient.getMutationCache().subscribe(event => {
   }
 });
 
-const getBaseUrl = () => {
-  if (typeof window !== "undefined" && window.location.origin.includes("localhost") && !window.location.hostname.includes("manus")) {
-    return "https://digimarket-xr799ese.manus.space";
-  }
-  return "";
-};
+// URL do servidor de produção
+const API_BASE_URL = "https://digimarket-xr799ese.manus.space";
 
 const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
-      url: `${getBaseUrl()}/api/trpc`,
+      url: `${API_BASE_URL}/api/trpc`,
       transformer: superjson,
       fetch(input, init) {
         return globalThis.fetch(input, {
