@@ -40,7 +40,6 @@ jobs:
 
       - name: Fix Capacitor Config and Sync
         run: |
-          # Garante que o webDir esteja correto antes de sincronizar
           sed -i "s/webDir: 'dist'/webDir: 'dist\/public'/g" capacitor.config.ts
           pnpm cap sync android
 
@@ -48,10 +47,12 @@ jobs:
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleRelease
+          # Usamos assembleDebug primeiro para garantir que o código compila
+          # Adicionamos --stacktrace para ver o erro real se falhar
+          ./gradlew assembleDebug --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-release
-          path: android/app/build/outputs/apk/release/app-release.apk
+          name: app-debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk
