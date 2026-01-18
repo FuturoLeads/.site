@@ -38,8 +38,11 @@ jobs:
       - name: Build Web Project
         run: pnpm run build
 
-      - name: Sync Capacitor
-        run: pnpm cap sync android
+      - name: Fix Capacitor Config and Sync
+        run: |
+          # Garante que o webDir esteja correto antes de sincronizar
+          sed -i "s/webDir: 'dist'/webDir: 'dist\/public'/g" capacitor.config.ts
+          pnpm cap sync android
 
       - name: Build Android APK
         run: |
